@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #define MAX 1000
 
@@ -29,6 +30,8 @@ void printSearchMenu();
 void addContact(struct contact *records, int *index);
 
 void removeContact(struct contact *records, int *index);
+
+void invalidRemoveInput();
 
 void searchFirstName();
 
@@ -228,6 +231,38 @@ void addContact(struct contact *records, int *index) {
 
 void removeContact(struct contact *records, int *index) {
     printf("removeContact\n");
+    char email[128];
+    printf("Email address of contact to be removed: ");
+    scanf("%s", &email);
+    int indexToRemove = -1;
+    for (int i = 0; i < index; i++) {
+        struct contact tmpC = records[i];
+        if (strcmp(tmpC.emailAddress, email) == 0) {
+            indexToRemove = i;
+            break;
+        }
+    }
+    while (1) {
+        if (indexToRemove != -1) {
+            int size = *index;
+            for (int i = indexToRemove; i < size - 1; i++) {
+                if (strcmp(records[i].emailAddress,"") == 0) {
+                    break;
+                }
+                records[i] = records[i + 1];
+            }
+            int i = *index;
+            *index = i - 1;
+            break;
+        } else {
+            invalidRemoveInput();
+        }
+    }
+}
+
+void invalidRemoveInput() {
+    printf("*** Cannot find matching contact, please try again ***\n");
+    printf("\n");
 }
 
 void searchFirstName() {
@@ -262,7 +297,8 @@ void writeRecords(char path[], struct contact *list, int index) {
         for (int i = 0; i < index; i++) {
             struct contact tmpC = list[i];
             struct address tmpA = tmpC.address;
-            fprintf(write, "%s %s %s %s %s %s %s\n", &tmpC.firstName, &tmpC.otherNames, &tmpC.emailAddress, &tmpC.telephone,
+            fprintf(write, "%s %s %s %s %s %s %s\n", &tmpC.firstName, &tmpC.otherNames, &tmpC.emailAddress,
+                    &tmpC.telephone,
                     &tmpA.street, &tmpA.town, &tmpA.country);
         }
     } else {
