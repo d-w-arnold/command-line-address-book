@@ -1,5 +1,45 @@
 #include <stdio.h>
 
+struct address {
+    char street[128];
+    char town[128];
+    char country[128]; // TODO: (?) validate
+};
+
+struct contact {
+    char firstName[128]; // TODO validate length
+    char otherNames[128]; // TODO validate length
+    char emailAddress[128]; // TODO: validate email address format on entry
+    char telephone[128]; // TODO: validate telephone number format on entry
+    struct address;
+};
+
+int getStdIn(int fun);
+
+void invalidInput();
+
+void printMenu();
+
+void printSearchMenu();
+
+void addContact();
+
+void removeContact();
+
+void searchFirstName();
+
+void searchOtherNames();
+
+void searchEmailAddress();
+
+void searchTelephone();
+
+void searchTown();
+
+void searchCountry();
+
+void writeRecords(); // Write records to file on exit
+
 /**
  * The task is to create an Address Book in C or C++ (your choice).
  * You will see the fields we need in the attached spec
@@ -24,9 +64,156 @@
  * If this happens, upload your code to a file sharing service like Dropbox and
  * send me the download link instead
  *
+ * See PDF in project root directory for more details.
+ *
  * @return return code
  */
 int main() {
-    printf("Hello, World!\n");
+    // Reload records when the program next executes.
+    char path[] = "/Users/David/Desktop/technical_test_Netduma/records.txt";
+    printf("\n");
+    printf("Loading records from '%s' ...\n", path);
+    printf("\n");
+    FILE *read;
+    read = fopen(path, "r"); // Open read stream
+    if (read == NULL) { // Defensive programming - checking to see if input file exists for reading.
+        printf("*** No input file found ***\n");
+    } else {
+        printMenu();
+        writeRecords();
+    }
+    fclose(read);
+
     return 0;
+}
+
+// Main menu of the command line address book.
+void printMenu() {
+    while (1) {
+        printf("-- Welcome to your command line Address Book --\n");
+        printf("-- (Main Menu) --\n");
+        printf("Please choose an option:\n");
+        printf("0: Exit\n");
+        printf("1: Add a contact from Address Book\n");
+        printf("2: Remove a contact from Address Book\n");
+        printf("3: Search for a contact in the Address Book\n");
+        printf("\n");
+        switch(getStdIn(1)) {
+            case 0:
+                return;
+            case 1:
+                addContact();
+                break;
+            case 2:
+                removeContact();
+                break;
+            case 3:
+                printSearchMenu();
+                break;
+        }
+        printf("\n");
+    }
+}
+
+// Main menu for searching the records in the address book.
+void printSearchMenu() {
+    printf("-- (Search Menu) --\n");
+    printf("Please choose which field to search by:\n");
+    printf("0: Return to Main Menu\n");
+    printf("1: First name\n");
+    printf("2: Other names\n");
+    printf("3: Email Address\n");
+    printf("4: Telephone Number\n");
+    printf("5: Town\n");
+    printf("6: Country\n");
+    printf("\n");
+    switch(getStdIn(1)) {
+        case 0:
+            return;
+        case 1:
+            searchFirstName();
+            break;
+        case 2:
+            searchOtherNames();
+            break;
+        case 3:
+            searchEmailAddress();
+            break;
+        case 4:
+            searchTelephone();
+            break;
+        case 5:
+            searchTown();
+            break;
+        case 6:
+            searchCountry();
+            break;
+    }
+    printf("\n");
+}
+
+int getStdIn(int fun) {
+    int n;
+    int valid = 0;
+    while (valid == 0) {
+        printf("Type here: ");
+        scanf("%d", &n);
+        printf("\n");
+        if (fun == 0) { // printMenu
+            if (0 <= n && n <= 3) {
+                valid = 1;
+            } else if (n != '\n') { // Check for '\n' which proceeds a int from stdin.
+                invalidInput();
+            }
+        } else if (fun == 1) { // printSearchMenu
+            if (0 <= n && n <= 6) {
+                valid = 1;
+            } else if (n != '\n') { // Check for '\n' which proceeds a int from stdin.
+                invalidInput();
+            }
+        }
+    }
+    return n;
+}
+
+void invalidInput() {
+    printf("*** Invalid input, please try again ***\n");
+    printf("\n");
+}
+
+void addContact() {
+    printf("addContact\n");
+}
+
+void removeContact() {
+    printf("removeContact\n");
+}
+
+void searchFirstName() {
+    printf("searchFirstName\n");
+}
+
+void searchOtherNames() {
+    printf("searchOtherNames\n");
+}
+
+void searchEmailAddress() {
+    printf("searchEmailAddress\n");
+}
+
+void searchTelephone() {
+    printf("searchTelephone\n");
+}
+
+void searchTown() {
+    printf("searchTown\n");
+}
+
+void searchCountry() {
+    printf("searchCountry\n");
+}
+
+// Write records to file on exit
+void writeRecords() {
+    printf("writeRecords\n");
 }
