@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#define MAX 1000
+
 struct address {
     char street[128];
     char town[128];
@@ -11,8 +13,10 @@ struct contact {
     char otherNames[128]; // TODO validate length
     char emailAddress[128]; // TODO: validate email address format on entry
     char telephone[128]; // TODO: validate telephone number format on entry
-    struct address;
+    struct address address;
 };
+
+void loadRecords(FILE *read, char path[], struct contact *list);
 
 int getStdIn(int fun);
 
@@ -69,22 +73,36 @@ void writeRecords(); // Write records to file on exit
  * @return return code
  */
 int main() {
-    // Reload records when the program next executes.
     char path[] = "/Users/David/Desktop/technical_test_Netduma/records.txt";
-    printf("\n");
-    printf("Loading records from '%s' ...\n", path);
-    printf("\n");
+    struct contact records[MAX];
     FILE *read;
     read = fopen(path, "r"); // Open read stream
-    if (read == NULL) { // Defensive programming - checking to see if input file exists for reading.
-        printf("*** No input file found ***\n");
-    } else {
+    if ((read = fopen(path, "r")) != NULL) {
+        loadRecords(read, path, records);
         printMenu();
         writeRecords();
+    } else {
+        printf("*** No input file found ***\n");
     }
     fclose(read);
 
     return 0;
+}
+
+// Reload records when the program next executes.
+void loadRecords(FILE *read, char path[], struct contact *list) {
+    printf("\n");
+    printf("Loading records from '%s' ...\n", path);
+    printf("\n");
+    struct address tmpA;
+    struct contact tmpC;
+    int index = 0;
+    while (fscanf(read, "%s %s %s %s %s %s %s", &tmpC.firstName, &tmpC.otherNames, &tmpC.emailAddress, &tmpC.telephone,
+                  &tmpA.street, &tmpA.town, &tmpA.country) == 7) {
+        tmpC.address = tmpA;
+        list[index] = tmpC;
+        index++;
+    }
 }
 
 // Main menu of the command line address book.
@@ -98,7 +116,7 @@ void printMenu() {
         printf("2: Remove a contact from Address Book\n");
         printf("3: Search for a contact in the Address Book\n");
         printf("\n");
-        switch(getStdIn(1)) {
+        switch (getStdIn(1)) {
             case 0:
                 return;
             case 1:
@@ -127,7 +145,7 @@ void printSearchMenu() {
     printf("5: Town\n");
     printf("6: Country\n");
     printf("\n");
-    switch(getStdIn(1)) {
+    switch (getStdIn(1)) {
         case 0:
             return;
         case 1:
