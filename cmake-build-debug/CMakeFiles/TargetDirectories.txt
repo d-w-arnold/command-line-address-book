@@ -1,0 +1,3 @@
+/Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles/technical_test_Netduma.dir
