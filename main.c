@@ -16,13 +16,13 @@ struct contact {
     struct address address;
 };
 
-void loadRecords(FILE *read, char path[], struct contact *list);
+int loadRecords(FILE *read, char path[], struct contact *list);
 
 int getStdIn(int fun);
 
 void invalidInput();
 
-void printMenu();
+void printMenu(int *index);
 
 void printSearchMenu();
 
@@ -42,7 +42,7 @@ void searchTown();
 
 void searchCountry();
 
-void writeRecords(); // Write records to file on exit
+void writeRecords(char path[], struct contact *list, int index); // Write records to file on exit
 
 /**
  * The task is to create an Address Book in C or C++ (your choice).
@@ -76,11 +76,11 @@ int main() {
     char path[] = "/Users/David/Desktop/technical_test_Netduma/records.txt";
     struct contact records[MAX];
     FILE *read;
-    read = fopen(path, "r"); // Open read stream
     if ((read = fopen(path, "r")) != NULL) {
-        loadRecords(read, path, records);
-        printMenu();
-        writeRecords();
+        int index;
+        index = loadRecords(read, path, records);
+        printMenu(&index);
+        writeRecords(path, records, index);
     } else {
         printf("*** No input file found ***\n");
     }
@@ -90,7 +90,7 @@ int main() {
 }
 
 // Reload records when the program next executes.
-void loadRecords(FILE *read, char path[], struct contact *list) {
+int loadRecords(FILE *read, char path[], struct contact *list) {
     printf("\n");
     printf("Loading records from '%s' ...\n", path);
     printf("\n");
@@ -103,10 +103,11 @@ void loadRecords(FILE *read, char path[], struct contact *list) {
         list[index] = tmpC;
         index++;
     }
+    return index; // The last index populated in the list of structs.
 }
 
 // Main menu of the command line address book.
-void printMenu() {
+void printMenu(int *index) {
     while (1) {
         printf("-- Welcome to your command line Address Book --\n");
         printf("-- (Main Menu) --\n");
@@ -232,6 +233,17 @@ void searchCountry() {
 }
 
 // Write records to file on exit
-void writeRecords() {
+void writeRecords(char path[], struct contact *list, int index) {
     printf("writeRecords\n");
+    FILE *write;
+    if ((write = fopen(path, "w")) != NULL) {
+        for (int i = 0; i < index; i++) {
+            struct contact tmpC = list[i];
+            struct address tmpA = tmpC.address;
+            fprintf(write, "%s %s %s %s %s %s %s\n", &tmpC.firstName, &tmpC.otherNames, &tmpC.emailAddress, &tmpC.telephone,
+                    &tmpA.street, &tmpA.town, &tmpA.country);
+        }
+    } else {
+        printf("*** No file to write to ***\n");
+    }
 }
