@@ -16,19 +16,19 @@ struct contact {
     struct address address;
 };
 
-int loadRecords(FILE *read, char path[], struct contact *list);
+int loadRecords(FILE *read, char path[], struct contact *records);
 
 int getStdIn(int fun);
 
 void invalidInput();
 
-void printMenu(int *index);
+void printMenu(struct contact *records, int *index);
 
 void printSearchMenu();
 
-void addContact();
+void addContact(struct contact *records, int *index);
 
-void removeContact();
+void removeContact(struct contact *records, int *index);
 
 void searchFirstName();
 
@@ -79,7 +79,7 @@ int main() {
     if ((read = fopen(path, "r")) != NULL) {
         int index;
         index = loadRecords(read, path, records);
-        printMenu(&index);
+        printMenu(records, &index);
         writeRecords(path, records, index);
     } else {
         printf("*** No input file found ***\n");
@@ -90,7 +90,7 @@ int main() {
 }
 
 // Reload records when the program next executes.
-int loadRecords(FILE *read, char path[], struct contact *list) {
+int loadRecords(FILE *read, char path[], struct contact *records) {
     printf("\n");
     printf("Loading records from '%s' ...\n", path);
     printf("\n");
@@ -100,14 +100,14 @@ int loadRecords(FILE *read, char path[], struct contact *list) {
     while (fscanf(read, "%s %s %s %s %s %s %s", &tmpC.firstName, &tmpC.otherNames, &tmpC.emailAddress, &tmpC.telephone,
                   &tmpA.street, &tmpA.town, &tmpA.country) == 7) {
         tmpC.address = tmpA;
-        list[index] = tmpC;
+        records[index] = tmpC;
         index++;
     }
     return index; // The last index populated in the list of structs.
 }
 
 // Main menu of the command line address book.
-void printMenu(int *index) {
+void printMenu(struct contact *records, int *index) {
     while (1) {
         printf("-- Welcome to your command line Address Book --\n");
         printf("-- (Main Menu) --\n");
@@ -121,10 +121,10 @@ void printMenu(int *index) {
             case 0:
                 return;
             case 1:
-                addContact();
+                addContact(records, index);
                 break;
             case 2:
-                removeContact();
+                removeContact(records, index);
                 break;
             case 3:
                 printSearchMenu();
@@ -200,11 +200,33 @@ void invalidInput() {
     printf("\n");
 }
 
-void addContact() {
+void addContact(struct contact *records, int *index) {
     printf("addContact\n");
+    struct address tmpA;
+    struct contact tmpC;
+    printf("First Name: ");
+    scanf("%s", &tmpC.firstName);
+    printf("Other Names: ");
+    scanf("%s", &tmpC.otherNames);
+    printf("Email Address: ");
+    scanf("%s", &tmpC.emailAddress);
+    printf("Telephone: ");
+    scanf("%s", &tmpC.telephone);
+    printf("(Address)\n");
+    printf("Street: ");
+    scanf("%s", &tmpA.street);
+    printf("Town: ");
+    scanf("%s", &tmpA.town);
+    printf("Country: ");
+    scanf("%s", &tmpA.country);
+    printf("\n");
+    tmpC.address = tmpA;
+    int i = *index;
+    records[i] = tmpC;
+    *index = i + 1;
 }
 
-void removeContact() {
+void removeContact(struct contact *records, int *index) {
     printf("removeContact\n");
 }
 
