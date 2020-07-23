@@ -31,6 +31,8 @@ void addContact(struct contact *records, int *index);
 
 void removeContact(struct contact *records, int *index);
 
+void validRemoveInput(char email[]);
+
 void invalidRemoveInput();
 
 void searchFirstName();
@@ -232,32 +234,38 @@ void addContact(struct contact *records, int *index) {
 void removeContact(struct contact *records, int *index) {
     printf("removeContact\n");
     char email[128];
-    printf("Email address of contact to be removed: ");
-    scanf("%s", &email);
-    int indexToRemove = -1;
-    for (int i = 0; i < index; i++) {
-        struct contact tmpC = records[i];
-        if (strcmp(tmpC.emailAddress, email) == 0) {
-            indexToRemove = i;
-            break;
+    int validRemoval = 0;
+    while (validRemoval == 0) {
+        printf("Email address of contact to be removed: ");
+        scanf("%s", &email);
+        int indexToRemove = -1;
+        for (int i = 0; i < *index; i++) {
+            struct contact tmpC = records[i];
+            if (strcmp(tmpC.emailAddress, email) == 0) {
+                indexToRemove = i;
+                break;
+            }
         }
-    }
-    while (1) {
-        if (indexToRemove != -1) {
-            int size = *index;
-            for (int i = indexToRemove; i < size - 1; i++) {
-                if (strcmp(records[i].emailAddress,"") == 0) {
+        if (0 <= indexToRemove && indexToRemove <= index) {
+            for (int i = indexToRemove; i < *index - 1; i++) {
+                if (strcmp(records[i].emailAddress, "") == 0) {
                     break;
                 }
                 records[i] = records[i + 1];
             }
             int i = *index;
             *index = i - 1;
-            break;
+            validRemoval = 1;
+            validRemoveInput(email);
         } else {
             invalidRemoveInput();
         }
     }
+}
+
+void validRemoveInput(char email[]) {
+    printf("*** Removed contact with the email address: %s ***\n", email);
+    printf("\n");
 }
 
 void invalidRemoveInput() {
