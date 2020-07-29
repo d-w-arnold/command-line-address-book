@@ -1,6 +1,6 @@
 # Command_Line_Address_Book
 
-A simple command line address book, with the following functionality:
+A simple command line address book, written in C.
 
 See `./cpp-address-book-specification.pdf` for full details.
 
