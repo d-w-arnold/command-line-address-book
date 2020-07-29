@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <regex.h>
 
 #define MAX 1000
 #define CHAR_SIZE 128
@@ -7,14 +8,14 @@
 struct address {
     char street[CHAR_SIZE];
     char town[CHAR_SIZE];
-    char country[CHAR_SIZE]; // TODO: (?) validate
+    char country[CHAR_SIZE];
 };
 
 struct contact {
-    char firstName[CHAR_SIZE]; // TODO validate length
-    char otherNames[CHAR_SIZE]; // TODO validate length
-    char emailAddress[CHAR_SIZE]; // TODO: validate email address format on entry
-    char telephone[CHAR_SIZE]; // TODO: validate telephone number format on entry
+    char firstName[CHAR_SIZE];
+    char otherNames[CHAR_SIZE];
+    char emailAddress[CHAR_SIZE];
+    char telephone[CHAR_SIZE];
     struct address address;
 };
 
@@ -92,7 +93,7 @@ int main() {
 // Reload records when the program next executes.
 int loadRecords(FILE *read, char path[], struct contact *records) {
     printf("\n");
-    printf("Loading records from '%s' ...\n", path);
+    printf("Loading records from ...\n'%s'\n", path);
     printf("\n");
     struct address tmpA;
     struct contact tmpC;
@@ -143,7 +144,7 @@ void printMenu(struct contact *records, int *index) {
         printf("-- (Main Menu) --\n");
         printf("Please choose an option:\n");
         printf("0: Exit\n");
-        printf("1: Add a contact from Address Book\n");
+        printf("1: Add a contact to Address Book\n");
         printf("2: Remove a contact from Address Book\n");
         printf("3: Search for a contact in the Address Book\n");
         printf("\n");
@@ -201,25 +202,89 @@ void printSearchMenu(struct contact *records, int *index) {
     printf("\n");
 }
 
+int validateHelper(const char reg_exp[], char str[]) {
+    regex_t preg;
+    int rc;
+    rc = regcomp(&preg, reg_exp, REG_EXTENDED | REG_NOSUB);
+    if (rc != 0) {
+        if (rc == REG_BADPAT || rc == REG_ECOLLATE)
+            fprintf(stderr, "Bad Regex/Collate\n");
+        if (rc == REG_ECTYPE)
+            fprintf(stderr, "Invalid Char\n");
+        if (rc == REG_EESCAPE)
+            fprintf(stderr, "Trailing \\\n");
+        if (rc == REG_ESUBREG || rc == REG_EBRACK)
+            fprintf(stderr, "Invalid number/[] error\n");
+        if (rc == REG_EPAREN || rc == REG_EBRACE)
+            fprintf(stderr, "Paren/Bracket error\n");
+        if (rc == REG_BADBR || rc == REG_ERANGE)
+            fprintf(stderr, "{} content invalid/Invalid endpoint\n");
+        if (rc == REG_ESPACE)
+            fprintf(stderr, "Memory error\n");
+        if (rc == REG_BADRPT)
+            fprintf(stderr, "Invalid regex\n");
+        fprintf(stderr, "%s: Failed to compile the regular expression:%d\n", __func__, rc);
+    }
+    rc = regexec(&preg, str, (size_t) 0, NULL, 0);
+    if (rc == 0) {
+        regfree(&preg);
+        return 0;
+    } else {
+        regfree(&preg);
+        return 1;
+    }
+}
+
+int validateEmail(char str[]) {
+    const char *reg_exp = "^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$"; // Email address regex
+    return validateHelper(reg_exp, str);
+}
+
+int validateTelephone(char str[]) {
+    const char *reg_exp = ""; // TODO: Populate with UK telephone number regex
+    return validateHelper(reg_exp, str);
+}
+
 void addContact(struct contact *records, int *index) {
     printf("-- (Adding contact) --\n");
     struct address tmpA;
     struct contact tmpC;
-    printf("First Name: ");
-    scanf("%s", &tmpC.firstName);
-    printf("Other Names: ");
-    scanf("%s", &tmpC.otherNames);
-    printf("Email Address: ");
-    scanf("%s", &tmpC.emailAddress);
-    printf("Telephone: ");
-    scanf("%s", &tmpC.telephone);
+    while (1) {
+        printf("First Name (2 or more characters): ");
+        scanf("%s", &tmpC.firstName);
+        if (strlen(tmpC.firstName) >= 2) {
+            break;
+        } else {
+            invalidInput();
+        }
+    }
+    while (1) {
+        printf("Other Names (2 or more characters): ");
+        scanf("%s", &tmpC.otherNames);
+        if (strlen(tmpC.otherNames) >= 2) {
+            break;
+        } else {
+            invalidInput();
+        }
+    }
+    while (1) {
+        printf("Email Address: ");
+        scanf("%s", &tmpC.emailAddress);
+        if (validateEmail(tmpC.emailAddress) == 0) {
+            break;
+        } else {
+            invalidInput();
+        }
+    }
+    printf("Telephone (e.g. +447123456789): ");
+    scanf("%s", &tmpC.telephone); // TODO: Validate telephone number
     printf("(Address)\n");
     printf("Street: ");
     scanf("%s", &tmpA.street);
     printf("Town: ");
     scanf("%s", &tmpA.town);
     printf("Country: ");
-    scanf("%s", &tmpA.country);
+    scanf("%s", &tmpA.country); // TODO: (?) Add validation for countries
     printf("\n");
     tmpC.address = tmpA;
     int i = *index;
@@ -416,6 +481,9 @@ void searchCountry(struct contact *records, const int *index) {
 
 // Write records to file on exit
 void writeRecords(char path[], struct contact *list, int index) {
+    printf("\n");
+    printf("Writing records to ...\n'%s'\n", path);
+    printf("\n");
     FILE *write;
     if ((write = fopen(path, "w")) != NULL) {
         for (int i = 0; i < index; i++) {
