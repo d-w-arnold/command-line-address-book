@@ -44,16 +44,16 @@ RM = "/Users/David/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/David/Desktop/technical_test_Netduma
+CMAKE_SOURCE_DIR = "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/David/Desktop/technical_test_Netduma/cmake-build-debug
+CMAKE_BINARY_DIR = "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book/cmake-build-debug"
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/technical_test_Netduma.dir/all
+all: CMakeFiles/Command_Line_Address_Book.dir/all
 
 .PHONY : all
 
@@ -63,36 +63,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/technical_test_Netduma.dir/clean
+clean: CMakeFiles/Command_Line_Address_Book.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/technical_test_Netduma.dir
+# Target rules for target CMakeFiles/Command_Line_Address_Book.dir
 
 # All Build rule for target.
-CMakeFiles/technical_test_Netduma.dir/all:
-	$(MAKE) -f CMakeFiles/technical_test_Netduma.dir/build.make CMakeFiles/technical_test_Netduma.dir/depend
-	$(MAKE) -f CMakeFiles/technical_test_Netduma.dir/build.make CMakeFiles/technical_test_Netduma.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target technical_test_Netduma"
-.PHONY : CMakeFiles/technical_test_Netduma.dir/all
+CMakeFiles/Command_Line_Address_Book.dir/all:
+	$(MAKE) -f CMakeFiles/Command_Line_Address_Book.dir/build.make CMakeFiles/Command_Line_Address_Book.dir/depend
+	$(MAKE) -f CMakeFiles/Command_Line_Address_Book.dir/build.make CMakeFiles/Command_Line_Address_Book.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book/cmake-build-debug/CMakeFiles" --progress-num=1,2 "Built target Command_Line_Address_Book"
+.PHONY : CMakeFiles/Command_Line_Address_Book.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/technical_test_Netduma.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/technical_test_Netduma.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/technical_test_Netduma.dir/rule
+CMakeFiles/Command_Line_Address_Book.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book/cmake-build-debug/CMakeFiles" 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/Command_Line_Address_Book.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book/cmake-build-debug/CMakeFiles" 0
+.PHONY : CMakeFiles/Command_Line_Address_Book.dir/rule
 
 # Convenience name for target.
-technical_test_Netduma: CMakeFiles/technical_test_Netduma.dir/rule
+Command_Line_Address_Book: CMakeFiles/Command_Line_Address_Book.dir/rule
 
-.PHONY : technical_test_Netduma
+.PHONY : Command_Line_Address_Book
 
 # clean rule for target.
-CMakeFiles/technical_test_Netduma.dir/clean:
-	$(MAKE) -f CMakeFiles/technical_test_Netduma.dir/build.make CMakeFiles/technical_test_Netduma.dir/clean
-.PHONY : CMakeFiles/technical_test_Netduma.dir/clean
+CMakeFiles/Command_Line_Address_Book.dir/clean:
+	$(MAKE) -f CMakeFiles/Command_Line_Address_Book.dir/build.make CMakeFiles/Command_Line_Address_Book.dir/clean
+.PHONY : CMakeFiles/Command_Line_Address_Book.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

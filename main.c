@@ -72,7 +72,8 @@ void writeRecords(char path[], struct contact *list, int index); // Write record
  * @return return code
  */
 int main() {
-    char path[] = "/Users/David/Desktop/technical_test_Netduma/records.txt";
+    char path[] = "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/"
+                  "projects/Command_Line_Address_Book/records.txt";
     struct contact records[MAX];
     FILE *read;
     if ((read = fopen(path, "r")) != NULL) {
@@ -82,7 +83,8 @@ int main() {
         writeRecords(path, records, index);
     } else {
         printf("\n");
-        printf("*** No input file found ***\n");
+        printf("*** No input file found, check line 75 in 'main.c' is the correct "
+               "absolute path for './records.txt' ***\n");
         printf("\n");
     }
     fclose(read);

@@ -1,15 +1,11 @@
-# Netduma Technical Test, C programming
+# Command_Line_Address_Book
 
-Issues:
+A simple command line address book, with the following functionality:
 
-- I wanted to get the navigation of the command line address book working first.
+See `./cpp-address-book-specification.pdf` for full details.
 
-- Didn't get round to completing the search functionality.
+1) Add contact to address book
 
-If I had 1-2 weeks:
+2) Remove contact from address book
 
-- I would finish implementing the search functionality.
-
-- Add validations for email address and telephone using regex.
-
-- Check against a list of validate countries.
+3) Search for contacts within address book
