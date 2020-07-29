@@ -48,10 +48,10 @@ RM = "/Users/David/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/David/Desktop/technical_test_Netduma
+CMAKE_SOURCE_DIR = "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/David/Desktop/technical_test_Netduma/cmake-build-debug
+CMAKE_BINARY_DIR = "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book/cmake-build-debug"
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles /Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book/cmake-build-debug/CMakeFiles" "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book/cmake-build-debug/CMakeFiles/progress.marks"
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/David/Desktop/technical_test_Netduma/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/projects/Command_Line_Address_Book/cmake-build-debug/CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named technical_test_Netduma
+# Target rules for targets named Command_Line_Address_Book
 
 # Build rule for target.
-technical_test_Netduma: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 technical_test_Netduma
-.PHONY : technical_test_Netduma
+Command_Line_Address_Book: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Command_Line_Address_Book
+.PHONY : Command_Line_Address_Book
 
 # fast build rule for target.
-technical_test_Netduma/fast:
-	$(MAKE) -f CMakeFiles/technical_test_Netduma.dir/build.make CMakeFiles/technical_test_Netduma.dir/build
-.PHONY : technical_test_Netduma/fast
+Command_Line_Address_Book/fast:
+	$(MAKE) -f CMakeFiles/Command_Line_Address_Book.dir/build.make CMakeFiles/Command_Line_Address_Book.dir/build
+.PHONY : Command_Line_Address_Book/fast
 
 main.o: main.c.o
 
@@ -129,7 +129,7 @@ main.o: main.c.o
 
 # target to build an object file
 main.c.o:
-	$(MAKE) -f CMakeFiles/technical_test_Netduma.dir/build.make CMakeFiles/technical_test_Netduma.dir/main.c.o
+	$(MAKE) -f CMakeFiles/Command_Line_Address_Book.dir/build.make CMakeFiles/Command_Line_Address_Book.dir/main.c.o
 .PHONY : main.c.o
 
 main.i: main.c.i
@@ -138,7 +138,7 @@ main.i: main.c.i
 
 # target to preprocess a source file
 main.c.i:
-	$(MAKE) -f CMakeFiles/technical_test_Netduma.dir/build.make CMakeFiles/technical_test_Netduma.dir/main.c.i
+	$(MAKE) -f CMakeFiles/Command_Line_Address_Book.dir/build.make CMakeFiles/Command_Line_Address_Book.dir/main.c.i
 .PHONY : main.c.i
 
 main.s: main.c.s
@@ -147,7 +147,7 @@ main.s: main.c.s
 
 # target to generate assembly for a file
 main.c.s:
-	$(MAKE) -f CMakeFiles/technical_test_Netduma.dir/build.make CMakeFiles/technical_test_Netduma.dir/main.c.s
+	$(MAKE) -f CMakeFiles/Command_Line_Address_Book.dir/build.make CMakeFiles/Command_Line_Address_Book.dir/main.c.s
 .PHONY : main.c.s
 
 # Help Target
@@ -158,7 +158,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... technical_test_Netduma"
+	@echo "... Command_Line_Address_Book"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

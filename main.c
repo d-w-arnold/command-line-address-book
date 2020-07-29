@@ -1,49 +1,45 @@
 #include <stdio.h>
 #include <string.h>
+#include <regex.h>
 
 #define MAX 1000
+#define CHAR_SIZE 128
 
 struct address {
-    char street[128];
-    char town[128];
-    char country[128]; // TODO: (?) validate
+    char street[CHAR_SIZE];
+    char town[CHAR_SIZE];
+    char country[CHAR_SIZE];
 };
 
 struct contact {
-    char firstName[128]; // TODO validate length
-    char otherNames[128]; // TODO validate length
-    char emailAddress[128]; // TODO: validate email address format on entry
-    char telephone[128]; // TODO: validate telephone number format on entry
+    char firstName[CHAR_SIZE];
+    char otherNames[CHAR_SIZE];
+    char emailAddress[CHAR_SIZE];
+    char telephone[CHAR_SIZE];
     struct address address;
 };
 
 int loadRecords(FILE *read, char path[], struct contact *records);
 
-int getStdIn(int fun);
-
-void invalidInput();
-
 void printMenu(struct contact *records, int *index);
 
-void printSearchMenu();
+void printSearchMenu(struct contact *records, int *index);
 
 void addContact(struct contact *records, int *index);
 
 void removeContact(struct contact *records, int *index);
 
-void invalidRemoveInput();
+void searchFirstName(struct contact *records, const int *index);
 
-void searchFirstName();
+void searchOtherNames(struct contact *records, const int *index);
 
-void searchOtherNames();
+void searchEmailAddress(struct contact *records, const int *index);
 
-void searchEmailAddress();
+void searchTelephone(struct contact *records, const int *index);
 
-void searchTelephone();
+void searchTown(struct contact *records, const int *index);
 
-void searchTown();
-
-void searchCountry();
+void searchCountry(struct contact *records, const int *index);
 
 void writeRecords(char path[], struct contact *list, int index); // Write records to file on exit
 
@@ -76,7 +72,8 @@ void writeRecords(char path[], struct contact *list, int index); // Write record
  * @return return code
  */
 int main() {
-    char path[] = "/Users/David/Desktop/technical_test_Netduma/records.txt";
+    char path[] = "/Users/David/Library/Mobile Documents/com~apple~CloudDocs/"
+                  "projects/Command_Line_Address_Book/records.txt";
     struct contact records[MAX];
     FILE *read;
     if ((read = fopen(path, "r")) != NULL) {
@@ -85,7 +82,10 @@ int main() {
         printMenu(records, &index);
         writeRecords(path, records, index);
     } else {
-        printf("*** No input file found ***\n");
+        printf("\n");
+        printf("*** No input file found, check line 75 in 'main.c' is the correct "
+               "absolute path for './records.txt' ***\n");
+        printf("\n");
     }
     fclose(read);
 
@@ -95,7 +95,7 @@ int main() {
 // Reload records when the program next executes.
 int loadRecords(FILE *read, char path[], struct contact *records) {
     printf("\n");
-    printf("Loading records from '%s' ...\n", path);
+    printf("Loading records from ...\n'%s'\n", path);
     printf("\n");
     struct address tmpA;
     struct contact tmpC;
@@ -109,68 +109,9 @@ int loadRecords(FILE *read, char path[], struct contact *records) {
     return index; // The last index populated in the list of structs.
 }
 
-// Main menu of the command line address book.
-void printMenu(struct contact *records, int *index) {
-    while (1) {
-        printf("-- Welcome to your command line Address Book --\n");
-        printf("-- (Main Menu) --\n");
-        printf("Please choose an option:\n");
-        printf("0: Exit\n");
-        printf("1: Add a contact from Address Book\n");
-        printf("2: Remove a contact from Address Book\n");
-        printf("3: Search for a contact in the Address Book\n");
-        printf("\n");
-        switch (getStdIn(1)) {
-            case 0:
-                return;
-            case 1:
-                addContact(records, index);
-                break;
-            case 2:
-                removeContact(records, index);
-                break;
-            case 3:
-                printSearchMenu();
-                break;
-        }
-        printf("\n");
-    }
-}
-
-// Main menu for searching the records in the address book.
-void printSearchMenu() {
-    printf("-- (Search Menu) --\n");
-    printf("Please choose which field to search by:\n");
-    printf("0: Return to Main Menu\n");
-    printf("1: First name\n");
-    printf("2: Other names\n");
-    printf("3: Email Address\n");
-    printf("4: Telephone Number\n");
-    printf("5: Town\n");
-    printf("6: Country\n");
+void invalidInput() {
     printf("\n");
-    switch (getStdIn(1)) {
-        case 0:
-            return;
-        case 1:
-            searchFirstName();
-            break;
-        case 2:
-            searchOtherNames();
-            break;
-        case 3:
-            searchEmailAddress();
-            break;
-        case 4:
-            searchTelephone();
-            break;
-        case 5:
-            searchTown();
-            break;
-        case 6:
-            searchCountry();
-            break;
-    }
+    printf("*** Invalid input, please try again ***\n");
     printf("\n");
 }
 
@@ -198,30 +139,154 @@ int getStdIn(int fun) {
     return n;
 }
 
-void invalidInput() {
-    printf("*** Invalid input, please try again ***\n");
+// Main menu of the command line address book.
+void printMenu(struct contact *records, int *index) {
+    while (1) {
+        printf("-- Welcome to your command line Address Book --\n");
+        printf("-- (Main Menu) --\n");
+        printf("Please choose an option:\n");
+        printf("0: Exit\n");
+        printf("1: Add a contact to Address Book\n");
+        printf("2: Remove a contact from Address Book\n");
+        printf("3: Search for a contact in the Address Book\n");
+        printf("\n");
+        switch (getStdIn(1)) {
+            case 0:
+                return;
+            case 1:
+                addContact(records, index);
+                break;
+            case 2:
+                removeContact(records, index);
+                break;
+            case 3:
+                printSearchMenu(records, index);
+                break;
+        }
+        printf("\n");
+    }
+}
+
+// Main menu for searching the records in the address book.
+void printSearchMenu(struct contact *records, int *index) {
+    printf("-- (Search Menu) --\n");
+    printf("Please choose which field to search by:\n");
+    printf("0: Return to Main Menu\n");
+    printf("1: First name\n");
+    printf("2: Other names\n");
+    printf("3: Email Address\n");
+    printf("4: Telephone Number\n");
+    printf("5: Town\n");
+    printf("6: Country\n");
+    printf("\n");
+    switch (getStdIn(1)) {
+        case 0:
+            return;
+        case 1:
+            searchFirstName(records, index);
+            break;
+        case 2:
+            searchOtherNames(records, index);
+            break;
+        case 3:
+            searchEmailAddress(records, index);
+            break;
+        case 4:
+            searchTelephone(records, index);
+            break;
+        case 5:
+            searchTown(records, index);
+            break;
+        case 6:
+            searchCountry(records, index);
+            break;
+    }
     printf("\n");
 }
 
+int validateHelper(const char reg_exp[], char str[]) {
+    regex_t preg;
+    int rc;
+    rc = regcomp(&preg, reg_exp, REG_EXTENDED | REG_NOSUB);
+    if (rc != 0) {
+        if (rc == REG_BADPAT || rc == REG_ECOLLATE)
+            fprintf(stderr, "Bad Regex/Collate\n");
+        if (rc == REG_ECTYPE)
+            fprintf(stderr, "Invalid Char\n");
+        if (rc == REG_EESCAPE)
+            fprintf(stderr, "Trailing \\\n");
+        if (rc == REG_ESUBREG || rc == REG_EBRACK)
+            fprintf(stderr, "Invalid number/[] error\n");
+        if (rc == REG_EPAREN || rc == REG_EBRACE)
+            fprintf(stderr, "Paren/Bracket error\n");
+        if (rc == REG_BADBR || rc == REG_ERANGE)
+            fprintf(stderr, "{} content invalid/Invalid endpoint\n");
+        if (rc == REG_ESPACE)
+            fprintf(stderr, "Memory error\n");
+        if (rc == REG_BADRPT)
+            fprintf(stderr, "Invalid regex\n");
+        fprintf(stderr, "%s: Failed to compile the regular expression:%d\n", __func__, rc);
+    }
+    rc = regexec(&preg, str, (size_t) 0, NULL, 0);
+    if (rc == 0) {
+        regfree(&preg);
+        return 0;
+    } else {
+        regfree(&preg);
+        return 1;
+    }
+}
+
+int validateEmail(char str[]) {
+    const char *reg_exp = "^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+(.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$"; // Email address regex
+    return validateHelper(reg_exp, str);
+}
+
+int validateTelephone(char str[]) {
+    const char *reg_exp = ""; // TODO: Populate with UK telephone number regex
+    return validateHelper(reg_exp, str);
+}
+
 void addContact(struct contact *records, int *index) {
-    printf("addContact\n");
+    printf("-- (Adding contact) --\n");
     struct address tmpA;
     struct contact tmpC;
-    printf("First Name: ");
-    scanf("%s", &tmpC.firstName);
-    printf("Other Names: ");
-    scanf("%s", &tmpC.otherNames);
-    printf("Email Address: ");
-    scanf("%s", &tmpC.emailAddress);
-    printf("Telephone: ");
-    scanf("%s", &tmpC.telephone);
+    while (1) {
+        printf("First Name (2 or more characters): ");
+        scanf("%s", &tmpC.firstName);
+        if (strlen(tmpC.firstName) >= 2) {
+            break;
+        } else {
+            invalidInput();
+        }
+    }
+    while (1) {
+        printf("Other Names (2 or more characters): ");
+        scanf("%s", &tmpC.otherNames);
+        if (strlen(tmpC.otherNames) >= 2) {
+            break;
+        } else {
+            invalidInput();
+        }
+    }
+    while (1) {
+        printf("Email Address: ");
+        scanf("%s", &tmpC.emailAddress);
+        if (validateEmail(tmpC.emailAddress) == 0) {
+            break;
+        } else {
+            invalidInput();
+        }
+    }
+    printf("Telephone (e.g. +447123456789): ");
+    scanf("%s", &tmpC.telephone); // TODO: Validate telephone number
     printf("(Address)\n");
     printf("Street: ");
     scanf("%s", &tmpA.street);
     printf("Town: ");
     scanf("%s", &tmpA.town);
     printf("Country: ");
-    scanf("%s", &tmpA.country);
+    scanf("%s", &tmpA.country); // TODO: (?) Add validation for countries
     printf("\n");
     tmpC.address = tmpA;
     int i = *index;
@@ -229,79 +294,209 @@ void addContact(struct contact *records, int *index) {
     *index = i + 1;
 }
 
+void validRemoveInput(char email[]) {
+    printf("\n");
+    printf("*** Removed contact with the email address: %s ***\n", email);
+    printf("\n");
+}
+
+void invalidRemoveInput() {
+    printf("\n");
+    printf("*** Cannot find matching contact, please try again ***\n");
+    printf("\n");
+}
+
 void removeContact(struct contact *records, int *index) {
-    printf("removeContact\n");
-    char email[128];
-    printf("Email address of contact to be removed: ");
-    scanf("%s", &email);
-    int indexToRemove = -1;
-    for (int i = 0; i < index; i++) {
-        struct contact tmpC = records[i];
-        if (strcmp(tmpC.emailAddress, email) == 0) {
-            indexToRemove = i;
-            break;
+    printf("-- (Removing contact) --\n");
+    char email[CHAR_SIZE];
+    int validRemoval = 0;
+    while (validRemoval == 0) {
+        printf("Email address of contact to be removed: ");
+        scanf("%s", &email);
+        printf("\n");
+        int indexToRemove = -1;
+        for (int i = 0; i < *index; i++) {
+            struct contact tmpC = records[i];
+            if (strcmp(tmpC.emailAddress, email) == 0) {
+                indexToRemove = i;
+                break;
+            }
         }
-    }
-    while (1) {
-        if (indexToRemove != -1) {
-            int size = *index;
-            for (int i = indexToRemove; i < size - 1; i++) {
-                if (strcmp(records[i].emailAddress,"") == 0) {
+        if (0 <= indexToRemove && indexToRemove <= *index) {
+            for (int i = indexToRemove; i < *index - 1; i++) {
+                if (strcmp(records[i].emailAddress, "") == 0) {
                     break;
                 }
                 records[i] = records[i + 1];
             }
             int i = *index;
             *index = i - 1;
-            break;
+            validRemoval = 1;
+            validRemoveInput(email);
         } else {
             invalidRemoveInput();
         }
     }
 }
 
-void invalidRemoveInput() {
-    printf("*** Cannot find matching contact, please try again ***\n");
+void printResult(struct contact record) {
+    struct address tmpA = record.address;
+    printf("\n");
+    printf("*** Result found ***\n");
+    printf("\n");
+    printf("First Name: %s\n", record.firstName);
+    printf("Other Names: %s\n", record.otherNames);
+    printf("Email Address: %s\n", record.emailAddress);
+    printf("Telephone: %s\n", record.telephone);
+    printf("(Address)\n");
+    printf("Street: %s\n", tmpA.street);
+    printf("Town: %s\n", tmpA.town);
+    printf("Country: %s\n", tmpA.country);
     printf("\n");
 }
 
-void searchFirstName() {
-    printf("searchFirstName\n");
+void noResult() {
+    printf("\n");
+    printf("*** No matching result found ***\n");
+    printf("\n");
 }
 
-void searchOtherNames() {
-    printf("searchOtherNames\n");
+void searchFirstName(struct contact *records, const int *index) {
+    printf("-- (Search by first name) --\n");
+    char str[CHAR_SIZE];
+    printf("Type here: ");
+    scanf("%s", &str);
+    printf("\n");
+    int found = 0;
+    for (int i = 0; i < *index; i++) {
+        struct contact tmpC = records[i];
+        char *ptr = strstr(tmpC.firstName, str);
+        if (strcmp(str, tmpC.firstName) == 0 || ptr != NULL) {
+            printResult(tmpC);
+            found = 1;
+        }
+    }
+    if (found == 0) {
+        noResult();
+    }
 }
 
-void searchEmailAddress() {
-    printf("searchEmailAddress\n");
+void searchOtherNames(struct contact *records, const int *index) {
+    printf("-- (Search by other names) --\n");
+    char str[CHAR_SIZE];
+    printf("Type here: ");
+    scanf("%s", &str);
+    printf("\n");
+    int found = 0;
+    for (int i = 0; i < *index; i++) {
+        struct contact tmpC = records[i];
+        char *ptr = strstr(tmpC.otherNames, str);
+        if (strcmp(str, tmpC.otherNames) == 0 || ptr != NULL) {
+            printResult(tmpC);
+            found = 1;
+        }
+    }
+    if (found == 0) {
+        noResult();
+    }
 }
 
-void searchTelephone() {
-    printf("searchTelephone\n");
+void searchEmailAddress(struct contact *records, const int *index) {
+    printf("-- (Search by email address) --\n");
+    char str[CHAR_SIZE];
+    printf("Type here: ");
+    scanf("%s", &str);
+    printf("\n");
+    int found = 0;
+    for (int i = 0; i < *index; i++) {
+        struct contact tmpC = records[i];
+        char *ptr = strstr(tmpC.emailAddress, str);
+        if (strcmp(str, tmpC.emailAddress) == 0 || ptr != NULL) {
+            printResult(tmpC);
+            found = 1;
+        }
+    }
+    if (found == 0) {
+        noResult();
+    }
 }
 
-void searchTown() {
-    printf("searchTown\n");
+void searchTelephone(struct contact *records, const int *index) {
+    printf("-- (Search by telephone) --\n");
+    char str[CHAR_SIZE];
+    printf("Type here: ");
+    scanf("%s", &str);
+    printf("\n");
+    int found = 0;
+    for (int i = 0; i < *index; i++) {
+        struct contact tmpC = records[i];
+        char *ptr = strstr(tmpC.telephone, str);
+        if (strcmp(str, tmpC.telephone) == 0 || ptr != NULL) {
+            printResult(tmpC);
+            found = 1;
+        }
+    }
+    if (found == 0) {
+        noResult();
+    }
 }
 
-void searchCountry() {
-    printf("searchCountry\n");
+void searchTown(struct contact *records, const int *index) {
+    printf("-- (Search by town) --\n");
+    char str[CHAR_SIZE];
+    printf("Type here: ");
+    scanf("%s", &str);
+    printf("\n");
+    int found = 0;
+    for (int i = 0; i < *index; i++) {
+        struct contact tmpC = records[i];
+        char *ptr = strstr(tmpC.address.town, str);
+        if (strcmp(str, tmpC.address.town) == 0 || ptr != NULL) {
+            printResult(tmpC);
+            found = 1;
+        }
+    }
+    if (found == 0) {
+        noResult();
+    }
+}
+
+void searchCountry(struct contact *records, const int *index) {
+    printf("-- (Search by telephone) --\n");
+    char str[CHAR_SIZE];
+    printf("Type here: ");
+    scanf("%s", &str);
+    printf("\n");
+    int found = 0;
+    for (int i = 0; i < *index; i++) {
+        struct contact tmpC = records[i];
+        char *ptr = strstr(tmpC.address.country, str);
+        if (strcmp(str, tmpC.address.country) == 0 || ptr != NULL) {
+            printResult(tmpC);
+            found = 1;
+        }
+    }
+    if (found == 0) {
+        noResult();
+    }
 }
 
 // Write records to file on exit
 void writeRecords(char path[], struct contact *list, int index) {
-    printf("writeRecords\n");
+    printf("\n");
+    printf("Writing records to ...\n'%s'\n", path);
+    printf("\n");
     FILE *write;
     if ((write = fopen(path, "w")) != NULL) {
         for (int i = 0; i < index; i++) {
             struct contact tmpC = list[i];
             struct address tmpA = tmpC.address;
             fprintf(write, "%s %s %s %s %s %s %s\n", &tmpC.firstName, &tmpC.otherNames, &tmpC.emailAddress,
-                    &tmpC.telephone,
-                    &tmpA.street, &tmpA.town, &tmpA.country);
+                    &tmpC.telephone, &tmpA.street, &tmpA.town, &tmpA.country);
         }
     } else {
+        printf("\n");
         printf("*** No file to write to ***\n");
+        printf("\n");
     }
 }
