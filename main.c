@@ -243,7 +243,7 @@ int validateEmail(char str[]) {
 }
 
 int validateTelephone(char str[]) {
-    const char *reg_exp = ""; // TODO: Populate with UK telephone number regex
+    const char *reg_exp = "^0[0-9]{10}$";
     return validateHelper(reg_exp, str);
 }
 
@@ -278,8 +278,15 @@ void addContact(struct contact *records, int *index) {
             invalidInput();
         }
     }
-    printf("Telephone (e.g. +447123456789): ");
-    scanf("%s", &tmpC.telephone); // TODO: Validate telephone number
+    while (1) {
+        printf("Telephone (UK only, e.g. 07123456789): ");
+        scanf("%s", &tmpC.telephone);
+        if (validateTelephone(tmpC.telephone) == 0) {
+            break;
+        } else {
+            invalidInput();
+        }
+    }
     printf("(Address)\n");
     printf("Street: ");
     scanf("%s", &tmpA.street);
